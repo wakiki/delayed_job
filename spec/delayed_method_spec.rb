@@ -34,6 +34,12 @@ describe 'random ruby objects' do
     job.payload_object.perform.should == 'Once upon...'
   end
 
+  it "should take priority as an option" do
+    Object.new.send_later(:to_s, :priority => 55)
+    job = Delayed::Job.find(:first)
+    job.priority.should == 55
+  end
+
   context "send_at" do
     it "should queue a new job" do
       lambda do

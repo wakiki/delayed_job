@@ -1,8 +1,10 @@
 module Delayed
   module MessageSending
     def send_later(method, *args)
-      
-      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, method.to_sym, args)
+      # extract options from *args
+      options = args[-1].is_a?(Hash) ? args[-1] : {}
+      priority = options[:priority] || 0
+      Delayed::Job.enqueue(Delayed::PerformableMethod.new(self, method.to_sym, args), priority)
     end
 
     def send_at(time, method, *args)
